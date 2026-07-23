@@ -206,7 +206,7 @@
 <div class="header-band">
   <div class="header-inner">
     <h1>🧟 ゾンビAI 開発リファレンス</h1>
-    <p class="subtitle">オープンキャンパス Mob AI バトル企画 — <code>tick()</code> の中身を書くための関数一覧</p>
+    <p class="subtitle">オープンキャンパス Mob AI バトル企画 — <code>onTick()</code> の中身を書くための関数一覧</p>
   </div>
 </div>
 
@@ -229,8 +229,8 @@
     <h2 style="--cat-color: var(--c-overview);"><span class="icon">🧟</span>概要</h2>
     <p>
       このゲームでは、チームごとに<strong>ゾンビの行動プログラム(AI)</strong>を書いて、ゾンビ同士をバトルさせます。
-      すでに用意されているクラスと <code>tick()</code> という場所(あとで説明します)があるので、
-      みなさんが書くのは<strong>「ゾンビにどう動いてほしいか」を <code>tick()</code> の中に書くだけ</strong>です。
+      すでに用意されているクラスと <code>onTick()</code> という場所(あとで説明します)があるので、
+      みなさんが書くのは<strong>「ゾンビにどう動いてほしいか」を <code>onTick()</code> の中に書くだけ</strong>です。
     </p>
     <p>ゾンビには、あらかじめこんな行動をさせることができます。</p>
     <ul>
@@ -246,10 +246,10 @@
     <h2 style="--cat-color: var(--c-basics);"><span class="icon">⚙️</span>基本の仕組み</h2>
     <ul>
       <li>
-        <code>tick()</code> は、バトルが始まると<strong>1秒間に10回</strong>、自動でくり返し呼ばれ続ける場所です。
+        <code>onTick()</code> は、バトルが始まると<strong>1秒間に10回</strong>、自動でくり返し呼ばれ続ける場所です。
         ここに書いた内容が、そのまま<strong>ゾンビの「考え方」</strong>になります。
       </li>
-      <li>相手がいない・倒れている・バトルが始まる前は、<code>tick()</code> の中身は実行されません(気にしなくて大丈夫です)。</li>
+      <li>相手がいない・倒れている・バトルが始まる前は、<code>onTick()</code> の中身は実行されません(気にしなくて大丈夫です)。</li>
       <li>体力は名前の上のハート(❤)で自動的に表示されます。特に何もしなくてOKです。</li>
       <li>最初から<strong>ネザライトの防具一式・ポーション3個・TNT3個・矢64本</strong>を持った状態で始まります。</li>
       <li>「剣で攻撃する」と「矢を射る/TNTを置く/ポーションを投げる」は、<strong>1回のtickにつきどちらか1つだけ</strong>効果があります。両方書いても、後に書いた方は無視されます。</li>
@@ -481,7 +481,7 @@ moveForward(10);</code></pre>
       <h3>移動中か確認<span class="sig">isMoving()</span></h3>
       <p>
         「まっすぐ歩く」で出した移動がまだ終わっていないかを、true(はい・移動中)/false(いいえ・止まっている)で返します。
-        <strong>tick()の一番はじめに <code>if (isMoving()) return;</code> と書いて、移動中は何もしないようにするのが定番です。</strong>
+        <strong>onTick()の一番はじめに <code>if (isMoving()) return;</code> と書いて、移動中は何もしないようにするのが定番です。</strong>
       </p>
 <pre><code>if (isMoving()) return; <span class="cm">// 歩いている途中なら、この先の処理をしない</span></code></pre>
     </div>
@@ -489,11 +489,11 @@ moveForward(10);</code></pre>
     <div class="func-block" style="--cat-color: var(--c-other);">
       <h3>一定時間停止<span class="sig">sleep(ミリ秒)</span></h3>
       <p>
-        指定した時間(ミリ秒。1000で1秒)の間、tick()の処理を丸ごと止めます。「攻撃したあと少し待ちたい」といった場面で使えます。
+        指定した時間(ミリ秒。1000で1秒)の間、onTick()の処理を丸ごと止めます。「攻撃したあと少し待ちたい」といった場面で使えます。
         100の倍数を指定するのがおすすめです。
       </p>
 <pre><code>attack();
-sleep(1000); <span class="cm">// この後1秒間、tick()の中身は実行されない</span></code></pre>
+sleep(1000); <span class="cm">// この後1秒間、onTick()の中身は実行されない</span></code></pre>
     </div>
 
     <div class="func-block" style="--cat-color: var(--c-other);">
@@ -507,7 +507,7 @@ sleep(1000); <span class="cm">// この後1秒間、tick()の中身は実行さ�
     <h2 style="--cat-color: var(--c-forbid);"><span class="icon">🚫</span>呼んではいけない関数</h2>
     <p>
       以下の関数は、ゲームの仕組み側が必要なタイミングで自動的に呼び出すためのものです。
-      <strong>みなさんが書く <code>tick()</code> の中から、直接呼び出さないでください。</strong>
+      <strong>みなさんが書く <code>onTick()</code> の中から、直接呼び出さないでください。</strong>
     </p>
     <ul class="forbidden">
       <li><code>setEntity()</code></li>
@@ -526,7 +526,7 @@ sleep(1000); <span class="cm">// この後1秒間、tick()の中身は実行さ�
     <h2 style="--cat-color: var(--c-sample);"><span class="icon">🧩</span>サンプルコード</h2>
 
     <h3 style="margin-top:6px;">近づいてTNTを置いて離脱する作戦</h3>
-<pre><code>tick() {
+<pre><code>onTick() {
     if (isMoving()) return;
 
     lookAtTarget();
@@ -541,7 +541,7 @@ sleep(1000); <span class="cm">// この後1秒間、tick()の中身は実行さ�
 }</code></pre>
 
     <h3>距離に応じて武器を使い分ける作戦</h3>
-<pre><code>tick() {
+<pre><code>onTick() {
     lookAtTarget();
 
     if (getDistanceToTarget() &gt; 8 &amp;&amp; getRemainingArrowCount() &gt; 0) {

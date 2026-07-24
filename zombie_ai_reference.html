@@ -216,6 +216,7 @@
     <a href="#overview">概要</a>
     <a href="#basics">基本の仕組み</a>
     <a href="#words">言葉のミニ辞典</a>
+    <a href="#ifblock">if文とブロック・return</a>
     <a href="#ops">演算子の使い方</a>
     <a href="#commands">コマンド</a>
     <a href="#action">アクション系の関数</a>
@@ -267,6 +268,76 @@
       <tr><td>引数(ひきすう)</td><td>関数の( )の中に渡す追加の情報のこと。例えば <code>moveForward(3)</code> の <code>3</code> は「3ブロック分歩く」という指定です</td></tr>
       <tr><td>数値・true/false</td><td>戻り値の種類。数字だったり、「はい/いいえ」(true/false)だったりします</td></tr>
     </table>
+  </section>
+
+  <section id="ifblock">
+    <h2 style="--cat-color: var(--c-words);"><span class="icon">🔀</span>if文とブロック・return</h2>
+
+    <h3 style="margin-top:0;">if文(もし〜だったら)</h3>
+    <p>
+      「もし〜だったら、こうする」という条件分岐を書くのが <code>if文</code> です。ゾンビの行動を切り替えるために一番よく使います。
+    </p>
+<pre><code>if (getDistanceToTarget() &lt; 3) {
+    holdSword();
+    attack();
+}</code></pre>
+    <p>
+      <code>if</code> のすぐ後ろの( )に条件を書きます。条件が成り立つ(true)時だけ、続く <code>{ }</code>(ブロック)の中身が実行されます。
+      条件が成り立たない(false)時は、<code>{ }</code> の中身は<strong>まるごと無視</strong>されます。
+    </p>
+
+    <h3>ブロック <code>{ }</code> について</h3>
+    <div class="box tips">
+      <span class="label">TIPS</span>
+      <code>{ }</code> はブロックと呼ばれる「まとまり」の印です。中に何行書いても、条件が成り立った時にすべてまとめて実行されます。
+      1行だけでも、必ず <code>{</code> と <code>}</code> で囲む書き方に慣れておくとミスが減ります。
+<pre><code>if (getHealth() &lt; 5) {
+    setYaw(getYaw() + 180); <span class="cm">// 反対を向いて</span>
+    moveForward(10);        <span class="cm">// 逃げる</span>
+}</code></pre>
+    </div>
+
+    <h3>else / else if(条件が成り立たなかった時)</h3>
+    <p>
+      <code>if</code> の後に <code>else</code> を続けると、「条件が成り立たなかった場合」の行動も書けます。
+      <code>else if</code> を挟むと、条件を上から順に複数チェックできます。
+    </p>
+<pre><code>if (getDistanceToTarget() &lt; 3) {
+    holdSword();
+    attack();          <span class="cm">// 近ければ剣で攻撃</span>
+} else if (!isMoving()) {
+    lookAtTarget();
+    moveForward(3);     <span class="cm">// 遠ければ近づく</span>
+} else {
+    say("待機中");      <span class="cm">// どちらでもなければ</span>
+}</code></pre>
+    <div class="box tips">
+      <span class="label">TIPS</span>
+      <code>if</code> → <code>else if</code> → <code>else</code> は上から順番にチェックされ、<strong>最初に条件が成り立ったブロックだけ</strong>が実行されます。
+      どの条件にも当てはまらなかった時の行動は、最後の <code>else { }</code> に書きます(<code>else</code>には条件を書きません)。
+    </div>
+
+    <h3>return(そこで処理を終える)</h3>
+    <p>
+      <code>return;</code> を実行すると、その場で <code>onTick()</code> の処理をすぐに終わらせます。
+      それより下に書いてある行は、その回のtickでは実行されません。「これ以上は何もしなくていい」という時に使います。
+    </p>
+<pre><code>if (isMoving()) {
+    return; <span class="cm">// ここで処理を終える。この下の行は実行されない</span>
+}
+
+lookAtTarget();
+moveForward(1);</code></pre>
+    <div class="box tips">
+      <span class="label">TIPS</span>
+      <code>{ }</code> の中が1行だけの場合は、<code>{ }</code> を省略して1行で書くこともできます。
+      その代表例が、次の定型文です。
+<pre><code>if (isMoving()) return; <span class="cm">// 移動中なら、この先の処理をせずに終える</span></code></pre>
+      <p style="margin:8px 0 0;">
+        これは <strong>onTick()の一番はじめに書く定番の1行</strong>です。移動が終わっていないうちに次の指示を出すと動きが乱れることがあるため、
+        「移動中なら今回は何もしない」という意味でよく使われます。
+      </p>
+    </div>
   </section>
 
   <section id="ops">
@@ -382,9 +453,15 @@ use();      <span class="cm">// 前方に投げる(3秒後に爆発)</span></cod
       <p>
         種類の指定には <code>PotionType.INSTANT_HEAL</code>(回復)や <code>PotionType.INSTANT_DAMAGE</code>(ダメージ)などが使えます。
       </p>
-<pre><code>lookAtTarget();                 <span class="cm">// 敵の方を向く</span>
-holdPotion(PotionType.HARMING); <span class="cm">// ダメージのポーションを持つ</span>
-use();                          <span class="cm">// 投げる</span></code></pre>
+      <div class="box warn">
+        ゾンビは<strong>アンデッド(不死系)</strong>のモンスターなので、ポーションの効果が人間と<strong>逆</strong>になります。
+        <code>INSTANT_HEAL</code>(回復ポーション)を浴びると<strong>ダメージ</strong>を受け、
+        逆に <code>INSTANT_DAMAGE</code> / <code>HARMING</code>(ダメージポーション)を浴びると<strong>回復</strong>してしまいます。
+        相手(=敵ゾンビ)を攻撃したい時は <code>INSTANT_HEAL</code> を、自分を回復させたい時は <code>HARMING</code> を投げる、と覚えておきましょう。
+      </div>
+<pre><code>lookAtTarget();                    <span class="cm">// 敵の方を向く</span>
+holdPotion(PotionType.INSTANT_HEAL); <span class="cm">// 敵はゾンビなので、回復ポーションが実質ダメージになる</span>
+use();                             <span class="cm">// 投げる</span></code></pre>
     </div>
   </section>
 

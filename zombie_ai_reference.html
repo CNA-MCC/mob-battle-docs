@@ -234,7 +234,7 @@
     </p>
     <p>ゾンビには、あらかじめこんな行動をさせることができます。</p>
     <ul>
-      <li>剣で攻撃する / 矢を射る / TNTを置く / ポーションを投げる</li>
+      <li>剣で攻撃する / 矢を射る / TNTを投げる / ポーションを投げる</li>
       <li>敵の方を向く、まっすぐ歩く、好きな方向を向く</li>
       <li>自分や敵の体力・位置・距離・持ち物を調べる</li>
       <li>少しの間待つ、チャットにメッセージを送る</li>
@@ -252,7 +252,7 @@
       <li>相手がいない・倒れている・バトルが始まる前は、<code>onTick()</code> の中身は実行されません(気にしなくて大丈夫です)。</li>
       <li>体力は名前の上のハート(❤)で自動的に表示されます。特に何もしなくてOKです。</li>
       <li>最初から<strong>ネザライトの防具一式・ポーション3個・TNT3個・矢64本</strong>を持った状態で始まります。</li>
-      <li>「剣で攻撃する」と「矢を射る/TNTを置く/ポーションを投げる」は、<strong>1回のtickにつきどちらか1つだけ</strong>効果があります。両方書いても、後に書いた方は無視されます。</li>
+      <li>「剣で攻撃する」と「矢を射る/TNTを投げる/ポーションを投げる」は、<strong>1回のtickにつきどちらか1つだけ</strong>効果があります。両方書いても、後に書いた方は無視されます。</li>
       <li>「まっすぐ歩く」という関数を呼ぶと、実際に歩き終わるまで数tickかかります。歩き終わったかどうかは「移動中か確認」する関数で調べられます。</li>
     </ul>
   </section>
@@ -363,13 +363,13 @@ use();      <span class="cm">// 矢を発射する</span></code></pre>
     </div>
 
     <div class="func-block" style="--cat-color: var(--c-action);">
-      <h3>着火済みTNTを置く<span class="sig">holdTNT() / use()</span></h3>
+      <h3>着火済みTNTを投げる<span class="sig">holdTNT() / use()</span></h3>
       <p>
-        <code>holdTNT()</code> でTNTを持ち、<code>use()</code> でその場に置きます。
+        <code>holdTNT()</code> でTNTを持ち、<code>use()</code> 前方に投げます。
         置いた3秒後に爆発します。使えるのは<strong>最大3回</strong>です。
       </p>
 <pre><code>holdTNT();  <span class="cm">// TNTを持つ</span>
-use();      <span class="cm">// 足元に置く(3秒後に爆発)</span></code></pre>
+use();      <span class="cm">// 前方に投げる(3秒後に爆発)</span></code></pre>
     </div>
 
     <div class="func-block" style="--cat-color: var(--c-action);">
@@ -525,7 +525,7 @@ sleep(1000); <span class="cm">// この後1秒間、onTick()の中身は実行�
   <section id="sample">
     <h2 style="--cat-color: var(--c-sample);"><span class="icon">🧩</span>サンプルコード</h2>
 
-    <h3 style="margin-top:6px;">近づいてTNTを置いて離脱する作戦</h3>
+    <h3 style="margin-top:6px;">近づいてTNTを投げて離脱する作戦</h3>
 <pre><code>onTick() {
     if (isMoving()) return;
 

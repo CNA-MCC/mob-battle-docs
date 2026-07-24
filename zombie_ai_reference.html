@@ -456,8 +456,8 @@ use();      <span class="cm">// 前方に投げる(3秒後に爆発)</span></cod
       <div class="box warn">
         ゾンビは<strong>アンデッド(不死系)</strong>のモンスターなので、ポーションの効果が人間と<strong>逆</strong>になります。
         <code>INSTANT_HEAL</code>(回復ポーション)を浴びると<strong>ダメージ</strong>を受け、
-        逆に <code>INSTANT_DAMAGE</code> / <code>HARMING</code>(ダメージポーション)を浴びると<strong>回復</strong>してしまいます。
-        相手(=敵ゾンビ)を攻撃したい時は <code>INSTANT_HEAL</code> を、自分を回復させたい時は <code>HARMING</code> を投げる、と覚えておきましょう。
+        逆に <code>INSTANT_DAMAGE</code>(ダメージポーション)を浴びると<strong>回復</strong>してしまいます。
+        相手(=敵ゾンビ)を攻撃したい時は <code>INSTANT_HEAL</code> を、自分を回復させたい時は <code>INSTANT_DAMAGE</code> を投げる、と覚えておきましょう。
       </div>
 <pre><code>lookAtTarget();                    <span class="cm">// 敵の方を向く</span>
 holdPotion(PotionType.INSTANT_HEAL); <span class="cm">// 敵はゾンビなので、回復ポーションが実質ダメージになる</span>
